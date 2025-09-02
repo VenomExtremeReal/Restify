@@ -1,0 +1,111 @@
+*{
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+}
+nav{
+    height: 15vh;
+    width: 100%;
+     background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: space-between;
+}
+
+.pngLogo{
+    height: 100px;
+    width: 200px;
+}
+.text{
+    gap: 40px;
+    display: flex;
+    color: white;
+    height: 20vh;
+    align-items: baseline;
+}
+.text div{
+    height: 20vh;
+}
+.text div h1{
+    padding-top: 50%;
+}
+
+main{
+    height: 100vh;
+    width: 100%;
+    background-image: url(fundoPit\ \(1\).png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bloco {
+    padding: 30px;
+    background-color: #425a59; /* Cor de fundo original */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 50vh;
+    width: 40vh;
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    align-items: center;
+    gap: 20px;
+    border-radius: 50px;
+    position: relative; /* Necessário para o pseudo-elemento */
+    z-index: 1; /* Garante que o conteúdo fique acima da borda */
+}
+.criaConta button{
+    padding-right: 3px;
+}
+
+/* Borda gradiente arredondada */
+.bloco::before {
+    content: "";
+    position: absolute;
+    inset: -5px; /* Espessura da borda */
+    background: linear-gradient(
+        to right,
+        rgb(255, 0, 0),   /* Vermelho à esquerda */
+        rgb(0, 255, 0),    /* Verde no topo */
+        rgb(0, 0, 255),    /* Azul à direita */
+        rgb(255, 0, 255)   /* Magenta embaixo */
+    );
+    border-radius: 55px; /* 50px (bloco) + 5px (borda) */
+    z-index: -1; /* Envia para trás do conteúdo */
+    /* --- CORREÇÃO: Remove o fundo do pseudo-elemento --- */
+    -webkit-mask: 
+        linear-gradient(#fff, #fff) content-box,
+        linear-gradient(#fff, #fff);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 5px; /* Igual à espessura da borda (inset) */
+}
+.imgLogoBloco{
+    height: 100px;
+    width: 150px;
+   
+}
+input{
+    border-radius: 20px;
+    height: 40px;
+    padding-left:5px ;
+}
+.imgLogo{
+     padding-top: 15px;
+     padding-left: 5px;
+}
+a{
+    color: yellow;
+}
+button{
+    height: 40px;
+    border-radius: 20px;
+}
+.bnt button{
+    background-color: yellow;
+    color: black;
+    width: 100px;
+}
