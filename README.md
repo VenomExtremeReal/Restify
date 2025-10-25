@@ -153,6 +153,6 @@ php -S localhost:8000
 
 ---
 
-**Desenvolvido com ❤️ para impulsionar restaurantes no digital**
+**Desenvolvido para impulsionar restaurantes no digital**
 
 Diagrama de Classe: https://drive.google.com/file/d/1U5LYPcz2FbULbEkdaemFH68T8VHucf8Y/view?usp=sharing
