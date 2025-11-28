@@ -9,13 +9,19 @@ date_default_timezone_set('America/Sao_Paulo');
 // Iniciar sessão
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// BASE_URL completamente universal
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+// BASE_URL - detecta automaticamente protocolo
+$protocol = 'https'; // Render sempre usa HTTPS
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
+    $protocol = $_SERVER['HTTP_X_FORWARDED_PROTO'];
+} elseif (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    $protocol = 'https';
+} elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+    $protocol = 'https';
+}
+
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
 $basePath = str_replace('\\', '/', dirname($scriptName));
-
-// Garantir que não termine com /
 $basePath = rtrim($basePath, '/');
 
 define('BASE_URL', $protocol . '://' . $host . $basePath);
