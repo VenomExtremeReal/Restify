@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
 # Instalar dependências
 RUN apt-get update && apt-get install -y \
@@ -7,9 +7,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     sqlite3 \
     libsqlite3-dev \
-    apache2 \
-    libapache2-mod-php \
-    && docker-php-ext-install pdo pdo_sqlite
+    && docker-php-ext-install pdo pdo_sqlite \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
