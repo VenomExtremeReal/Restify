@@ -32,21 +32,30 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod 666 database/restify.db
 
 # Configurar Apache
-RUN a2enmod rewrite && \
-    sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf && \
-    echo '<VirtualHost *:10000>' > /etc/apache2/sites-available/000-default.conf && \
-    echo '    DocumentRoot /var/www/html/public' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    <Directory /var/www/html/public>' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '        Options Indexes FollowSymLinks' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '        AllowOverride All' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '        Require all granted' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    </Directory>' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
 
-# Expor porta
+# Script de inicialização
+COPY <<EOF /start.sh
+#!/bin/bash
+PORT=\${PORT:-10000}
+sed -i "s/Listen 80/Listen \$PORT/" /etc/apache2/ports.conf
+cat > /etc/apache2/sites-available/000-default.conf <<VHOST
+<VirtualHost *:\$PORT>
+    DocumentRoot /var/www/html/public
+    <Directory /var/www/html/public>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+VHOST
+exec apache2-foreground
+EOF
+
+RUN chmod +x /start.sh
+
 EXPOSE 10000
 
-# Iniciar Apache
-CMD ["apache2ctl", "-D", "FOREGROUND"]
+CMD ["/start.sh"]
