@@ -41,12 +41,20 @@ PORT=\${PORT:-10000}
 sed -i "s/Listen 80/Listen \$PORT/" /etc/apache2/ports.conf
 cat > /etc/apache2/sites-available/000-default.conf <<VHOST
 <VirtualHost *:\$PORT>
+    ServerName localhost
     DocumentRoot /var/www/html/public
+    DirectoryIndex index.php index.html
+    
     <Directory /var/www/html/public>
-        Options Indexes FollowSymLinks
+        Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
+    
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+    
     ErrorLog \${APACHE_LOG_DIR}/error.log
     CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
