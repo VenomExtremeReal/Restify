@@ -34,12 +34,16 @@ RUN chown -R www-data:www-data /var/www/html \
 # Configurar Apache
 RUN a2enmod rewrite && \
     sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf && \
-    sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf && \
-    sed -i 's|<VirtualHost \*:80>|<VirtualHost *:10000>|' /etc/apache2/sites-available/000-default.conf && \
-    echo '<Directory /var/www/html/public>' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    AllowOverride All' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '    Require all granted' >> /etc/apache2/sites-available/000-default.conf && \
-    echo '</Directory>' >> /etc/apache2/sites-available/000-default.conf
+    echo '<VirtualHost *:10000>' > /etc/apache2/sites-available/000-default.conf && \
+    echo '    DocumentRoot /var/www/html/public' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '    <Directory /var/www/html/public>' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '        Options Indexes FollowSymLinks' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '        AllowOverride All' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '        Require all granted' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '    </Directory>' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '    ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '    CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf
 
 # Expor porta
 EXPOSE 10000
